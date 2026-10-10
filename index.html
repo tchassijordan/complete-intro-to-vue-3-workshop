@@ -5,34 +5,103 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.1.11"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
-  <body>
-    <div id="app">
-      <h1>Learning Vue.js</h1>
-      <p v-if="message.length % 2 === 0">Even: {{message}}</p>
-      <p v-else>Odd: {{message}}</p>
-      <button @click="toggle">Change message</button>
-    </div>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <body class="bg-slate-100 text-slate-800 antialiased">
+    <div id="app-root" style="font-family: &quot;Roboto&quot;, sans-serif">
+      <div class="flex min-h-screen flex-col">
+        <header
+          class="w-full bg-slate-900 px-4 py-6 text-center text-2xl font-bold tracking-wide text-white shadow-md"
+        >
+          What Silo is about
+        </header>
 
+        <main class="mx-auto w-full max-w-4xl flex-1 p-6">
+          <section>
+            <header>
+              <h3
+                class="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500"
+              >
+                Seasons
+              </h3>
+            </header>
+            <div class="flex flex-wrap gap-3">
+              <button
+                v-for="season in siloSeasons"
+                @click="markSeasonActive(season)"
+                :class="selectedSeason === season ? 'border-sky-500 ring-2 ring-sky-500' : 'border-slate-200'"
+                class="inline-flex cursor-pointer items-center gap-4 rounded-lg border bg-white px-5 py-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+              >
+                <span class="text-5xl font-bold text-slate-300"
+                  >{{season.seasonNumber}}</span
+                >
+                <span class="inline-flex flex-col items-start">
+                  <span class="font-semibold"> {{season.seasonTitle}} </span>
+                  <span class="text-xs text-slate-500"
+                    >Release: {{season.releaseYear}}</span
+                  >
+                </span>
+              </button>
+            </div>
+          </section>
+
+          <section v-if="selectedSeason" class="mt-8">
+            <header>
+              <h4 class="mb-3 text-xl font-semibold">
+                {{selectedSeason.seasonTitle}} Episodes
+              </h4>
+              <ul class="space-y-2">
+                <li
+                  v-for="episode in selectedSeason.episodes"
+                  class="rounded-md border border-slate-200 bg-white px-4 py-3 shadow-sm"
+                >
+                  <span class="font-medium"
+                    >Ep {{episode.episodeNumber}}: {{episode.title}}</span
+                  >
+                  <span class="block text-sm text-slate-500">
+                    {{episode.airDate}} · {{episode.runtimeMinutes}} mins
+                  </span>
+                </li>
+              </ul>
+            </header>
+          </section>
+        </main>
+
+        <footer
+          class="w-full bg-slate-200 p-4 text-center text-sm text-slate-600"
+        >
+          Copyright Apple TV Silo
+        </footer>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="silo-seasons-dataset.js"></script>
     <script>
       const { createApp } = Vue;
-      const app = createApp({
+      const appInstance = createApp({
         data() {
-          const message = /* html */ "Hello it works!";
+          const selectedSeason = null;
 
           return {
-            message,
+            siloSeasons: siloSeasonsDataset,
+            selectedSeason,
           };
         },
         methods: {
-          toggle() {
-            this.message = `Hello ${Math.random()}!`;
+          markSeasonActive(seasonDef) {
+            this.selectedSeason = seasonDef;
           },
         },
       });
 
-      app.mount("#app");
+      appInstance.mount("#app-root");
     </script>
   </body>
 </html>
