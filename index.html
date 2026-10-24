@@ -31,6 +31,27 @@
                 Seasons
               </h3>
             </header>
+            <fieldset class="mb-6 flex flex-col gap-2">
+              <label
+                for="activeSeason"
+                class="text-sm font-medium text-slate-700"
+              >
+                Active Season
+              </label>
+              <select
+                id="activeSeason"
+                @change="markSeasonActiveById"
+                class="w-full max-w-xs cursor-pointer rounded-lg border border-slate-200 bg-white px-4 py-2 text-slate-800 shadow-sm transition focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500"
+              >
+                <option value="">Choose Season</option>
+                <option
+                  v-for="season in siloSeasons"
+                  :value="season.seasonNumber"
+                >
+                  {{season.seasonTitle}}
+                </option>
+              </select>
+            </fieldset>
             <div class="flex flex-wrap gap-3">
               <button
                 v-for="season in siloSeasons"
@@ -85,6 +106,12 @@
     <script src="silo-seasons-dataset.js"></script>
     <script>
       const { createApp } = Vue;
+      const seasonTypeGuard = (testSeason) =>
+        typeof testSeason?.seasonNumber === "number" &&
+        typeof testSeason?.seasonTitle === "string" &&
+        typeof testSeason?.releaseYear === "number" &&
+        Array.isArray(testSeason?.episodes);
+
       const appInstance = createApp({
         data() {
           const selectedSeason = null;
@@ -97,6 +124,21 @@
         methods: {
           markSeasonActive(seasonDef) {
             this.selectedSeason = seasonDef;
+          },
+          markSeasonActiveById(event) {
+            const selectedSeasonNumber = Number(event.target.value);
+            console.log({ selectedSeasonNumber });
+            const selectedSeasonDef = this.siloSeasons.find(
+              ({ seasonNumber }) => seasonNumber === selectedSeasonNumber,
+            );
+
+            // when found set it to the selected season
+            if (seasonTypeGuard(selectedSeasonDef)) {
+              this.selectedSeason = selectedSeasonDef;
+            } else {
+              // else unselect the current active season
+              this.selectedSeason == null;
+            }
           },
         },
       });
