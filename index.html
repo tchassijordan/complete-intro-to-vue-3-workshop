@@ -1,10 +1,59 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Playground — Complete Intro to Vue 3</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.1.11"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   </head>
-  <body></body>
+  <body>
+    <main id="counter-app" class="p-4 space-y-2">
+      <h1 class="text-2xl bg-gray-200">Counter App</h1>
+      <form>
+        <fieldset class="flex flex-col gap-y-0.5">
+          <label for="incrementAmount" class="font-medium"
+            >Increment Amount</label
+          >
+          <input
+            type="number"
+            class="p-1 border min-w-20 max-w-46 rounded"
+            name="incrementAmount"
+            v-model="incrementAmount"
+          />
+        </fieldset>
+      </form>
+      <hr />
+      <p>Count: {{count}}</p>
+      <button @click="incrementCount" class="shadow p-1 border rounded coursor">
+        Increment Count
+      </button>
+    </main>
+
+    <script>
+      const { createApp } = Vue;
+      const appInstance = createApp({
+        data() {
+          return {
+            count: 1,
+            incrementAmount: 10,
+          };
+        },
+        methods: {
+          incrementCount() {
+            this.count += this.incrementAmount;
+          },
+        },
+      });
+
+      appInstance.mount("#counter-app");
+    </script>
+  </body>
 </html>
